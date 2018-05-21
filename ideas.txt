@@ -1,0 +1,4 @@
+-Landing Page avec différents liens (Routes AngularJS?)
+-Notifications via le système toast de Materialize
+-Envoi de mail à un collaborateur via un formulaire dédié
+-Tri par constructeur
