@@ -1,20 +1,80 @@
-body {
-  background-color: #2D232E;
+h1 {
+    color: #6E8387;
 }
 
-.card {
-  max-width: 450px;
-  max-height: 320px;
+#loginBody {
+    background-image: url('../img/bg/loginbg.jpg');
 }
 
-.nav-p208 {
-  background-color: #162133;
+/* Pour le login */
+main {
+  flex: 1 0 auto;
 }
 
-.nav-tm3lr {
-  background-color: #E51837;
+.input-field input[type=date]:focus + label,
+.input-field input[type=text]:focus + label,
+.input-field input[type=email]:focus + label,
+.input-field input[type=password]:focus + label {
+  color: #e91e63;
 }
 
-.nav-rc4 {
-  background-color: #FFCC2E;
+.input-field input[type=date]:focus,
+.input-field input[type=text]:focus,
+.input-field input[type=email]:focus,
+.input-field input[type=password]:focus {
+  border-bottom: 2px solid #e91e63;
+  box-shadow: none;
 }
+
+.parallax-container {
+    max-height: 300px;
+    margin-bottom: 20px;
+}
+
+/*#newUser {
+    float: left;
+    font-weight: bold;
+}
+
+#forgotPassword {
+    float: right;
+    font-weight: bold;
+}
+
+ Fin Login 
+
+ Style des boutons
+.btn {
+    background-color: #222222;
+}
+
+ Formulaire inscription 
+#formContainer {
+    background-color: rgba(34,34,34,0.9);
+    margin-top: 2rem;
+}
+.contentForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+mark {
+    background-color: rgba(103,105,124,0.6);
+}
+
+.generalNavColor {
+    background-color: #222222;
+}
+
+::placeholder {
+    color: #8D99AE;
+}
+
+legend {
+    color: #8D99AE;
+}*/
