@@ -4,7 +4,7 @@
         <a href="#!" class="brand-logo">FleetManage</a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
-            <li><a href="index.html">Accueil</a></li>
+            <li><a href="../index.php">Accueil</a></li>
             <li><a href="badges.html">Entretiens à venir</a></li>
             <li><a href="../controllers/logout.php">Déconnexion</a></li>
         </ul>

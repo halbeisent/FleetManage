@@ -16,7 +16,7 @@ include 'controllers/loginController.php';
         <main>
             <center>
                 <!-- logo du site -->
-                <img class="responsive-img" style="width: 250px;" src="https://i.imgur.com/ax0NCsK.gif" />
+                <img class="responsive-img" style="width: 500px;" src="assets/img/logo/siteLogo.png" />
                 <div class="section"></div>
                 <h5 class="indigo-text">Site interne à l'entreprise, veuillez vous identifier!</h5>
                 <div class="section"></div>

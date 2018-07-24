@@ -23,6 +23,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['lastName'] = $users->lastName;
                 $_SESSION['firstName'] = $users->firstName;
                 $_SESSION['userId'] = $users->id;
+                header('location: views/dashboard.php');
             } else {
                 $formError['login'] = 'Mauvaise adresse mail ou mot de passe';
             }

@@ -20,7 +20,7 @@ class users extends database {
     }
 
     public function addUser() {
-        $addQuery = 'INSERT INTO `g2c6d_users` (`mailAddress`, `password`, `lastName`, `firstName`, `birthDate`, `licenseScanPath`, `licenseNumber`, `isValid`, `streetNumber`, `streetName`, `zipCode`, `city`) VALUES (:mailAddress, :password, :lastName, :firstName, :birthDate, :licenseScanPath, :licenseNumber, :isValid, :streetNumber, :streetName, :zipCode, :city)';
+        $addQuery = 'INSERT INTO `g2c6d_users` (`mailAddress`, `password`, `lastName`, `firstName`, `birthDate`, `licenseScanPath`, `licenseNumber`, `isValid`, `streetNumber`, `streetName`, `zipCode`, `city`, `userGroups`) VALUES (:mailAddress, :password, :lastName, :firstName, :birthDate, :licenseScanPath, :licenseNumber, :isValid, :streetNumber, :streetName, :zipCode, :city, 3)';
         $addUser = $this->database->prepare($addQuery);
         $addUser->bindValue(':mailAddress', $this->mailAddress, PDO::PARAM_STR);
         $addUser->bindValue(':password', $this->password, PDO::PARAM_STR);
@@ -79,16 +79,47 @@ class users extends database {
         return $errorMsg;
     }
 
+    //Génération de la liste utilisateurs
+    public function getUserList() {
+        $userQuery = 'SELECT `id`, `firstName`, `lastName`, `mailAddress` FROM `g2c6d_users`';
+        $listQuery = $this->database->query($userQuery);
+        $queryResult = $listQuery->fetchAll(PDO::FETCH_OBJ);
+        return $queryResult;
+    }
+    
+     public function getUserById() {
+        $isCorrect = false;
+        // On met notre requète dans la variable $query qui selectionne tous les champs de la table patients l'id est egal à :id via marqueur nominatif sur id
+        $query = 'SELECT `id`, `lastName`, `firstName`, DATE_FORMAT(`birthdate`, "%d/%m/%Y") AS `birthDate, `licenseScanPath`, `licenseNumber`, `isValid`, `streetNumber`, `streetName`, `zipCode`, `city` FROM `g2c6d_users` WHERE `id` = :userId';
+        // On crée un objet $findProfil qui utilise la fonction prepare avec comme paramètre $query        
+        $findProfile = $this->database->prepare($query);
+        // on attribue la valeur via bindValue et on recupère les attributs de la classe via $this
+        $findProfile->bindValue(':userId', $this->id, PDO::PARAM_INT);
+        if ($findProfile->execute()) {
+            $profile = $findProfile->fetch(PDO::FETCH_OBJ);
+            // if imbriqué pour hydrater les valeurs
+            // si $profil est un objet(existe dans la table), on attribue directement les valeurs de l'objet $profil
+            if (is_object($profile)) {
+                $this->lastName = $profile->lastName;
+                $this->firstName = $profile->firstName;
+                $this->birthDate = $profile->birthdDate;
+                $this->mailAddress = $profile->mailAddress;
+                $isCorrect = true;
+            }
+        }
+        return $isCorrect;
+    }
+
     public function deleteUserById() {
         $userQuery = 'DELETE FROM `g2c6d_users` WHERE `id` = :id';
-        $user = $this->database->prepare($userQuery);
-        $user->bindValue(':id', $userparams->id, PDO::PARAM_STR);
-        $user->execute();
+        $userDelete = $this->database->prepare($userQuery);
+        $userDelete->bindValue(':id', $this->id, PDO::PARAM_STR);
+        return $userDelete->execute();
     }
 
     public function __destruct() {
         // On appelle le __destruct() du parent via "parent::""
         parent::__destruct();
-        }
+    }
 
 }
