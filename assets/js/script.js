@@ -2,6 +2,7 @@ $(document).ready(function () {
     $('.sidenav').sidenav();
     $('.parallax').parallax();
     $('.dropdown-trigger').dropdown();
+    $('select').formSelect();
     $('.datepicker').datepicker({
         format: 'dd/mm/yyyy',
         i18n: {
@@ -14,4 +15,8 @@ $(document).ready(function () {
     });
     $('.slider').slider();
     $('.modal').modal();
+    $('.fixed-action-btn').floatingActionButton({
+        direction: 'left',
+        hoverEnabled: false
+    });
 });

@@ -1,385 +1,87 @@
 <?php
 include '../navbar.php';
 include '../models/database.php';
-session_start();
+include '../models/users.php';
+include '../models/vehicles.php';
+$pageTitle = 'Dashboard utilisateur - CarPark Manager';
+$pageBackground = '';
+include '../header.php';
+include '../controllers/dashboardController.php';
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8"/>
-        <link rel="stylesheet" href="../assets/css/materialize.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="../assets/css/style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <main>
-        <div class="jumbo"></div>
-        <div class="container icons">
-            <div class="big-icon"></div>
-            <div class="rate">
-                <a class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="material-icons">email</i></a>
-            </div>
-            <div class="add">
-                <a class="add-btn btn-floating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></a>
-            </div>
+<div class="jumbo"></div>
+<div class="container icons">
+    <div class="big-icon"></div>
+    <div class="rate">
+        <a  href="userDetails.php?userId=<?= $users->id ?>" class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="material-icons">edit</i></a>
+    </div>
+    <div class="add">
+        <a class="add-btn btn-floating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></a>
+    </div>
+</div>
+<div class="details">
+    <h3><?= $_SESSION['firstName'] . ' ' . $_SESSION['lastName'] ?></h3>
+    <p><?= $userRole; ?></p>
+</div>
+<div class="container">
+    <div class="section">
+        <h5>Votre profil</h5>
+        <div class="card-panel">
+            <p class="center-align">
+                <strong>Nom:</strong> <?= $users->lastName ?><br />
+                <strong>Prénom:</strong> <?= $users->firstName ?><br />
+                <strong>Addresse:</strong> <?= $users->streetNumber ?> <?= $users->streetName ?> <?= $users->zipCode ?> <?= $users->city ?><br />
+                <strong>Date de naissance:</strong> <?= $users->birthDate ?><br />
+                <strong>Scan du permis:</strong> <?= $users->licenseScanPath ?><br />
+                <strong>Numéro du permis:</strong> <?= $users->licenseNumber ?><br />
+            </p>
         </div>
-        <div class="details">
-            <h3><?= $_SESSION['firstName'] . ' ' . $_SESSION['lastName'] ?></h3>
-            <p>Actor / Environmentalist</p>
-        </div>
-        <div class="container pics">
-            <div class="title">
-                <h6>Pictures</h6>
-            </div>
-            <div class="row row-1">
-                <div class="col m6 s12">
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+        <h5>Véhicule(s) attribué(s)</h5>
+        <div class="row">
+            <?php foreach ($vehicleCard as $vehicle) { ?>
+                <div class="col s12 m6 l6">
                     <div class="card">
-                        <div class="card-image" id="first-img">
-                            <span class="card-title">Inception</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col m6 s12">
-                    <div class="card">
-                        <div class="card-image" id="second-img">
-                            <span class="card-title">Django Unchained</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col m6 s12">
-                    <div class="card">
-                        <div class="card-image" id="third-img">
-                            <span class="card-title">The Wolf of Wallstreet</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col m6 s12">
-                    <div class="card">
-                        <div class="card-image" id="forth-img">
-                            <span class="card-title">The Great Gatsby</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container posts">
-            <div class="title">
-                <h6>Posts</h6>
-            </div>
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="card blue-grey">
-                        <div class="card-content white-text">
-                            <span class="card-title">Post title</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
+                        <div class="card-image">
+                            <img src="<?= $vehicle->exteriorPic ?>">
+                            <span class="card-title"><?= $vehicle->manufacturerName ?> <?= $vehicle->modelName ?></span>
                         </div>
                         <div class="card-action">
-                            <a href="#">Read more...</a>
-                            <div class="tags">
-                                <div class="chip">
-                                    Story
-                                </div>
-                                <div class="chip">
-                                    Adventure
-                                </div>
+                            <div class="row">
+                                <div class="action-btn col"><a class="btn-floating btn-large blue-grey darken-3" href="vehicleDashboard.php?vehicleId=<?= $vehicle->vehicleId ?>"><i class="material-icons">dashboard</i></a></div>
+                                <div class="action-btn col"><a class="btn-floating btn-large blue-grey darken-3" href="vehicleHistory.php?vehicleId=<?= $vehicle->vehicleId ?>"><i class="material-icons">history</i></a></div>
+                                <?php if ($_SESSION['roleId'] == 2) { ?>
+                                    <div class="action-btn col"><a class="btn-floating btn-large blue-grey darken-3" href="vehicleForm.php?vehicleId=<?= $vehicle->vehicleId ?>"><i class="material-icons">edit</i></a></div>
+                                    <div class="action-btn col"><a class="btn-floating btn-large red" href="dashboard.php?delVehicle=<?= $vehicle->vehicleId ?>"><i class="material-icons">delete</i></a></div>
+                                <?php } ?>
                             </div>
-                            <i class="material-icons card-love">favorite_border</i>
                         </div>
                     </div>
                 </div>
-                <div class="col s12 m6">
-                    <div class="card blue-grey">
-                        <div class="card-content white-text">
-                            <span class="card-title">Post title</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                        </div>
-                        <div class="card-action">
-                            <a href="#">Read more...</a>
-                            <div class="tags">
-                                <div class="chip">
-                                    Personal
-                                </div>
-                            </div>
-                            <i class="material-icons card-love">favorite_border</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="card blue-grey">
-                        <div class="card-content white-text">
-                            <span class="card-title">Post title</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                        </div>
-                        <div class="card-action">
-                            <a href="#">Read more...</a>
-                            <div class="tags">
-                                <div class="chip">
-                                    Love
-                                </div>
-                                <div class="chip">
-                                    Fiction
-                                </div>
-                            </div>
-                            <i class="material-icons card-love">favorite_border</i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m6">
-                    <div class="card blue-grey">
-                        <div class="card-content white-text">
-                            <span class="card-title">Post title</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                        </div>
-                        <div class="card-action">
-                            <a href="#">Read more...</a>
-                            <div class="tags">
-                                <div class="chip">
-                                    Story
-                                </div>
-                                <div class="chip">
-                                    Sad
-                                </div>
-                            </div>
-                            <i class="material-icons card-love">favorite_border</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="card blue-grey">
-                        <div class="card-content white-text">
-                            <span class="card-title">Post title</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                        </div>
-                        <div class="card-action">
-                            <a href="#">Read more...</a>
-                            <div class="tags">
-                                <div class="chip">
-                                    Happy
-                                </div>
-                                <div class="chip">
-                                    Fiction
-                                </div>
-                            </div>
-                            <i class="material-icons card-love">favorite_border</i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m6">
-                    <div class="card blue-grey">
-                        <div class="card-content white-text">
-                            <span class="card-title">Post title</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                        </div>
-                        <div class="card-action">
-                            <a href="#">Read more...</a>
-                            <div class="tags">
-                                <div class="chip">
-                                    Erotic
-                                </div>
-                                <div class="chip">
-                                    Fiction
-                                </div>
-                            </div>
-                            <i class="material-icons card-love">favorite_border</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php } ?>
         </div>
-        <div class="container blogs">
-            <div class="title">
-                <h6>Blogs</h6>
-            </div>
-            <ul class="collapsible" data-collapsible="accordion">
-                <li>
-                    <div class="collapsible-header active"><i class="material-icons">filter_drama</i>First blog</div>
-                    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias tempora nobis, amet ipsa qui officiis modi consequatur reprehenderit expedita nihil ab recusandae, molestiae. Maiores reprehenderit mollitia nisi perferendis quisquam eos repudiandae harum ducimus, impedit et numquam tempore? Labore explicabo sit mollitia sequi doloribus perspiciatis rem corporis veniam, aspernatur autem, tempore consequuntur asperiores excepturi quas ratione natus! Nesciunt, animi! Laudantium quia, aliquam non dolorem, aliquid quod soluta sit id suscipit facilis! Omnis qui in perferendis debitis quam architecto dignissimos sequi asperiores, porro explicabo blanditiis voluptate, totam necessitatibus quia repellendus dolorum animi accusamus molestias assumenda culpa unde sapiente magnam aut fuga? A quae magnam, ipsam modi minus. Optio nihil consequuntur rem quas, eveniet temporibus at atque voluptas voluptatibus beatae animi aliquam quos natus cum magni nobis doloremque illum incidunt, tenetur, quasi sunt aperiam? Reprehenderit officiis consequuntur repellat, atque provident quam. Ut perferendis libero fugiat hic nobis, iusto at dolorum ratione, facere, ipsum saepe, aliquid officia nihil. Inventore, voluptatibus animi sunt ratione adipisci reprehenderit nostrum qui cumque eum ut! Minima suscipit ratione voluptates, et, temporibus vitae doloribus ipsa ipsam. Eligendi ducimus distinctio perferendis praesentium. Eius dolor magni perspiciatis velit, possimus unde quis ea in inventore veritatis facere dicta delectus officiis aut vero voluptatum.</p></div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">place</i>Second blog</div>
-                    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam iure ratione facilis sapiente est, repellendus nesciunt voluptatum tempore magni natus, eius, cumque voluptates illo earum libero obcaecati, deleniti ducimus similique accusamus! Autem totam ipsa minus modi sed tempora porro. Commodi iste inventore fugit reprehenderit maiores dolorem cupiditate debitis repellat, perferendis minus sed, ipsa nulla, beatae eum nobis, asperiores aut aspernatur fuga mollitia itaque. Doloremque reprehenderit earum molestias non voluptatem veniam voluptates expedita, at, eius sunt rerum perspiciatis suscipit iure perferendis. Earum, quasi beatae qui unde ullam fuga assumenda! Consectetur natus temporibus, ipsa, mollitia odit, aliquid id aliquam assumenda quidem, optio ducimus dolor quis corporis iure praesentium sunt rem facilis atque quod odio. Rerum dolores aperiam numquam rem expedita, alias officiis officia minima impedit, beatae libero debitis eligendi. Placeat consequatur non, consectetur accusantium laborum sequi. Explicabo facilis officiis culpa debitis dicta omnis illo quo natus iste, fugiat vitae magni voluptatum. Sequi, illum! Ea voluptatum at similique, sint quisquam dolorum fuga repellat perferendis animi ullam eligendi, sed sapiente placeat non ducimus modi sit tempore reprehenderit deserunt cumque molestiae quod! Ipsam pariatur dicta iusto, illum in vel optio nam aut reprehenderit quam minima dolorem, eaque dignissimos harum. Nobis porro id molestiae eaque reprehenderit voluptas optio, assumenda, nisi fuga cupiditate, minima consequatur fugit dolorum. Ipsam harum, aspernatur.</p></div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">whatshot</i>Third blog</div>
-                    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam ullam asperiores illo, neque, et possimus, laudantium excepturi non sunt necessitatibus cum perferendis atque? Nihil aut adipisci non perferendis fuga voluptatem mollitia. Dicta obcaecati facilis veritatis! Sapiente omnis enim quos non alias, sit, cupiditate nesciunt perferendis rem est voluptatem blanditiis molestias dolor deserunt. Distinctio, odit. Rerum maiores, a voluptas, dolores eum veniam quod alias. Ipsum doloremque suscipit, corporis sapiente laudantium. Vel possimus eveniet error nostrum sint id, assumenda sunt quam hic, voluptatibus ipsum praesentium a odio voluptas ab eius est suscipit excepturi accusamus quo iure nemo! Vel tempora distinctio assumenda nam, ex ipsam adipisci deleniti voluptas eos unde recusandae provident nemo. Reprehenderit labore necessitatibus rem, suscipit quidem recusandae amet reiciendis pariatur!</p></div>
-                </li>
-            </ul>
-        </div>
-        <div class="container likes">
-            <div class="title">
-                <h6>Likes</h6>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    <ul class="tabs">
-                        <li class="tab col s3"><a class="active"  href="#test1">All</a></li>
-                        <li class="tab col s3"><a href="#test2">Pictures</a></li>
-                        <li class="tab col s3"><a href="#test3">Posts</a></li>
-                        <li class="tab col s3"><a href="#test4">Blogs</a></li>
-                    </ul>
-                </div>
-                <div id="test1" class="col s12">All</div>
-                <div id="test2" class="col s12">
-                    <div class="row">
-                        <div class="col s12 m6">
-                            <img class="materialboxed responsive-img" src="http://materializecss.com/images/sample-1.jpg">
-                        </div>
-                        <div class="col s12 m6">
-                            <img class="materialboxed responsive-img" src="http://materializecss.com/images/sample-1.jpg">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12 m6">
-                            <img class="materialboxed responsive-img" src="http://materializecss.com/images/sample-1.jpg">
-                        </div>
-                        <div class="col s12 m6">
-                            <img class="materialboxed responsive-img" src="http://materializecss.com/images/sample-1.jpg">
-                        </div>
-                    </div>
-                </div>
-                <div id="test3" class="col s12">
-                    <div class="row">
-                        <div class="col s12 m6">
-                            <div class="card blue-grey">
-                                <div class="card-content white-text">
-                                    <span class="card-title">Post title</span>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                                </div>
-                                <div class="card-action">
-                                    <a href="#">Read more...</a>
-                                    <div class="tags">
-                                        <div class="chip">
-                                            Story
-                                        </div>
-                                        <div class="chip">
-                                            Adventure
-                                        </div>
-                                    </div>
-                                    <i class="material-icons card-love">favorite_border</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s12 m6">
-                            <div class="card blue-grey">
-                                <div class="card-content white-text">
-                                    <span class="card-title">Post title</span>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                                </div>
-                                <div class="card-action">
-                                    <a href="#">Read more...</a>
-                                    <div class="tags">
-                                        <div class="chip">
-                                            Story
-                                        </div>
-                                        <div class="chip">
-                                            Adventure
-                                        </div>
-                                    </div>
-                                    <i class="material-icons card-love">favorite_border</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12 m6">
-                            <div class="card blue-grey">
-                                <div class="card-content white-text">
-                                    <span class="card-title">Post title</span>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                                </div>
-                                <div class="card-action">
-                                    <a href="#">Read more...</a>
-                                    <div class="tags">
-                                        <div class="chip">
-                                            Story
-                                        </div>
-                                        <div class="chip">
-                                            Adventure
-                                        </div>
-                                    </div>
-                                    <i class="material-icons card-love">favorite_border</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s12 m6">
-                            <div class="card blue-grey">
-                                <div class="card-content white-text">
-                                    <span class="card-title">Post title</span>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem aliquid nobis nesciunt nulla laudantium aspernatur, delectus sed, minus ex perspiciatis...</p>
-                                </div>
-                                <div class="card-action">
-                                    <a href="#">Read more...</a>
-                                    <div class="tags">
-                                        <div class="chip">
-                                            Story
-                                        </div>
-                                        <div class="chip">
-                                            Adventure
-                                        </div>
-                                    </div>
-                                    <i class="material-icons card-love">favorite_border</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="test4" class="col s12">
-                    <ul class="collapsible" data-collapsible="accordion">
-                        <li>
-                            <div class="collapsible-header active"><i class="material-icons">filter_drama</i>First blog</div>
-                            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias tempora nobis, amet ipsa qui officiis modi consequatur reprehenderit expedita nihil ab recusandae, molestiae. Maiores reprehenderit mollitia nisi perferendis quisquam eos repudiandae harum ducimus, impedit et numquam tempore? Labore explicabo sit mollitia sequi doloribus perspiciatis rem corporis veniam, aspernatur autem, tempore consequuntur asperiores excepturi quas ratione natus! Nesciunt, animi! Laudantium quia, aliquam non dolorem, aliquid quod soluta sit id suscipit facilis! Omnis qui in perferendis debitis quam architecto dignissimos sequi asperiores, porro explicabo blanditiis voluptate, totam necessitatibus quia repellendus dolorum animi accusamus molestias assumenda culpa unde sapiente magnam aut fuga? A quae magnam, ipsam modi minus. Optio nihil consequuntur rem quas, eveniet temporibus at atque voluptas voluptatibus beatae animi aliquam quos natus cum magni nobis doloremque illum incidunt, tenetur, quasi sunt aperiam? Reprehenderit officiis consequuntur repellat, atque provident quam. Ut perferendis libero fugiat hic nobis, iusto at dolorum ratione, facere, ipsum saepe, aliquid officia nihil. Inventore, voluptatibus animi sunt ratione adipisci reprehenderit nostrum qui cumque eum ut! Minima suscipit ratione voluptates, et, temporibus vitae doloribus ipsa ipsam. Eligendi ducimus distinctio perferendis praesentium. Eius dolor magni perspiciatis velit, possimus unde quis ea in inventore veritatis facere dicta delectus officiis aut vero voluptatum.</p></div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">place</i>Second blog</div>
-                            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam iure ratione facilis sapiente est, repellendus nesciunt voluptatum tempore magni natus, eius, cumque voluptates illo earum libero obcaecati, deleniti ducimus similique accusamus! Autem totam ipsa minus modi sed tempora porro. Commodi iste inventore fugit reprehenderit maiores dolorem cupiditate debitis repellat, perferendis minus sed, ipsa nulla, beatae eum nobis, asperiores aut aspernatur fuga mollitia itaque. Doloremque reprehenderit earum molestias non voluptatem veniam voluptates expedita, at, eius sunt rerum perspiciatis suscipit iure perferendis. Earum, quasi beatae qui unde ullam fuga assumenda! Consectetur natus temporibus, ipsa, mollitia odit, aliquid id aliquam assumenda quidem, optio ducimus dolor quis corporis iure praesentium sunt rem facilis atque quod odio. Rerum dolores aperiam numquam rem expedita, alias officiis officia minima impedit, beatae libero debitis eligendi. Placeat consequatur non, consectetur accusantium laborum sequi. Explicabo facilis officiis culpa debitis dicta omnis illo quo natus iste, fugiat vitae magni voluptatum. Sequi, illum! Ea voluptatum at similique, sint quisquam dolorum fuga repellat perferendis animi ullam eligendi, sed sapiente placeat non ducimus modi sit tempore reprehenderit deserunt cumque molestiae quod! Ipsam pariatur dicta iusto, illum in vel optio nam aut reprehenderit quam minima dolorem, eaque dignissimos harum. Nobis porro id molestiae eaque reprehenderit voluptas optio, assumenda, nisi fuga cupiditate, minima consequatur fugit dolorum. Ipsam harum, aspernatur.</p></div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third blog</div>
-                            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam ullam asperiores illo, neque, et possimus, laudantium excepturi non sunt necessitatibus cum perferendis atque? Nihil aut adipisci non perferendis fuga voluptatem mollitia. Dicta obcaecati facilis veritatis! Sapiente omnis enim quos non alias, sit, cupiditate nesciunt perferendis rem est voluptatem blanditiis molestias dolor deserunt. Distinctio, odit. Rerum maiores, a voluptas, dolores eum veniam quod alias. Ipsum doloremque suscipit, corporis sapiente laudantium. Vel possimus eveniet error nostrum sint id, assumenda sunt quam hic, voluptatibus ipsum praesentium a odio voluptas ab eius est suscipit excepturi accusamus quo iure nemo! Vel tempora distinctio assumenda nam, ex ipsam adipisci deleniti voluptas eos unde recusandae provident nemo. Reprehenderit labore necessitatibus rem, suscipit quidem recusandae amet reiciendis pariatur!</p></div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="fixed-action-btn fab" style="bottom: 45px; right: 24px;">
-            <a class="btn-floating btn-large red">
-                <i class="large material-icons">arrow_drop_up</i>
-            </a>
-            <ul>
-                <li><a class="btn-floating orange"><i class="material-icons">thumb_up</i></a></li>
-                <li><a class="btn-floating green"><i class="material-icons">star</i></a></li>
-                <li><a class="btn-floating blue"><i class="material-icons">add</i></a></li>
-            </ul>
-        </div>
-    </main>
-
-    <footer class="page-footer blue">
-        <div class="container">
-            <div class="row">
-                <div class="col l6 s12">
-                    <h5 class="white-text">Material Profile</h5>
-                    <p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum, voluptate.</p>
-                </div>
-                <div class="col l4 offset-l2 s12">
-                </div>
-            </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                &copy; 2015 Copyright
-                <a class="grey-text text-lighten-4 right" href="#!">Terms</a>
-            </div>
-        </div>
-    </footer>
-    <script src="../assets/js/jquery-3.3.1.min.js"></script>
-    <script src="../assets/js/materialize.min.js"></script>
-    <script src="../assets/js/script.js"></script>
-</body>
-</html>
-<?php session_write_close(); ?>
+    </div>
+    <div class="divider"></div>
+    <div class="card-panel">
+        <table>
+            <thead>
+            <th>Date du RDV</th>
+            <th>Véhicule concerné</th>
+            <th>Type de RDV</th>
+            </thead>
+            <?php foreach ($vehicleCard as $vehicle) { ?>
+                <tbody>
+                    <tr>
+                        <td>05/02/2019</td>
+                        <td><?= $vehicle->manufacturerName . ' ' . $vehicle->modelName ?></td>
+                        <td>Entretien</td>
+                    </tr>
+                </tbody>
+            <?php } ?>
+        </table>
+    </div>
+</div>
+<?php
+include '../footer.php';
+?>

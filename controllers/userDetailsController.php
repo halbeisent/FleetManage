@@ -1,148 +1,187 @@
 <?php
 
-// On instancie un nouvel $patients objet comme classe patients
+/* J'instancie un nouvel objet users avec ma méthode users() */
 $users = new users();
 
+/* J'initialise mon tableau contenant mes futures erreurs de formulaire à vide */
+$formError = array();
 
-if (isset($_GET['userId'])) {
-    $users->id = $_GET['userId'];
-    $userInfo = $users->getUserById();
-}
-var_dump($users);
+/* Si je passe un id en paramètre d'URL */
+if (isset($_GET['id'])) {
+    /* Je remplis l'objet $users->id avec la valeur du paramètre d'URL */
+    $users->id = $_GET['id'];
 
-//Création des regex pour controler les données du formulaire
-$regexName = '/^[a-zA-Zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ-]+$/';
-$regexBirthdate = '/^(0[1-9]|([1-2][0-9])|3[01])\/(0[1-9]|1[012])\/((19|20)[0-9]{2})$/';
-$regexEmail = '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'; // regex date au format yyyy-mm-dd
-$regexPhoneNumber = '/^[0-9]{10,10}$/';
-$regexPassword = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
-$fileUpload = '/tmp/fileUploads/';
+    /* J'initialise ma variable updateSuccess à false */
+    $updateSuccess = false;
 
-//Initialise $addSuccess en False pour afficher message
-$addSuccess = false;
+    /* Si je passe un updateBtn en POST */
+    if (isset($_POST['updateBtn'])) {
+        //Création des regex pour controler les données du formulaire
+        $regexName = '/^[a-zA-Zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ-]+$/';
+        $regexBirthdate = '/^(0[1-9]|([1-2][0-9])|3[01])\/(0[1-9]|1[012])\/((19|20)[0-9]{2})$/';
+        $regexEmail = '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'; // regex date au format yyyy-mm-dd
+        $regexPhoneNumber = '/^[0-9]{10,10}$/';
+        $regexPassword = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+        $fileUpload = '/tmp/fileUploads/';
 
-$hasLicense = false;
+        //Création d'un tableau pour retranscrire les erreurs lord du remplissage du formulaire
+        $formError = array();
 
-
-if (isset($_POST['submit'])) {
-
-//Création d'un tableau pour retranscrire les erreurs lord du remplissage du formulaire
-    $formError = array();
-
-    if (!empty($_POST['lastName'])) {
-        if (preg_match($regexName, $_POST['lastName'])) {
-            $users->lastName = htmlspecialchars($_POST['lastName']);
+        /* Si le POST de mon lastName n'est pas vide */
+        if (!empty($_POST['lastName'])) {
+            /* Je vérifie si son contenu match avec la RegEx */
+            if (preg_match($regexName, $_POST['lastName'])) {
+                /* Si c'est le cas, je remplis l'objet $users->lastName en prenant soin de retirer tous les caractères html du champ */
+                $users->lastName = htmlspecialchars($_POST['lastName']);
+            } else {
+                /* Si le POST de mon lastName est vide, j'affiche un message d'erreur */
+                $formError['lastName'] = 'Votre nom ne doit contenir que des lettres';
+            }
         } else {
-            $formError['lastName'] = 'Votre nom ne doit contenir que des lettres';
+            /* Si le POST de mon lastName ne match pas, j'affiche un message d'erreur */
+            $formError['lastName'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['lastName'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['firstName'])) {
-        if (preg_match($regexName, $_POST['firstName'])) {
-            $users->firstName = htmlspecialchars($_POST['firstName']);
+        /* Si le POST de mon firstName n'est pas vide */
+        if (!empty($_POST['firstName'])) {
+            /* Je vérifie si son contenu match avec la RegEx */
+            if (preg_match($regexName, $_POST['firstName'])) {
+                /* Si c'est le cas, je remplis l'objet $users->firstName en prenant soin de retirer tous les caractères html du champ */
+                $users->firstName = htmlspecialchars($_POST['firstName']);
+            } else {
+                /* Si le POST de mon firstName est vide, j'affiche un message d'erreur */
+                $formError['firstName'] = 'Votre prénom ne doit contenir que des lettres';
+            }
         } else {
-            $formError['firstName'] = 'Votre prénom ne doit contenir que des lettres';
+            /* Si le POST de mon firstName ne match pas, j'affiche un message d'erreur */
+            $formError['firstName'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['firstName'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['birthDate'])) {
-        if (preg_match($regexBirthdate, $_POST['birthDate'])) {
-            $users->birthDate = htmlspecialchars($_POST['birthDate']);
+        /* Si le POST de mon birthDate n'est pas vide */
+        if (!empty($_POST['birthDate'])) {
+            /* Si le POST de mon birthDate match avec la RegEx */
+            if (preg_match($regexBirthdate, $_POST['birthDate'])) {
+                /* Si c'est le cas, je remplis l'objet $users->birthDate en prenant soin de retirer tous les caractères html du champ */
+                $users->birthDate = htmlspecialchars($_POST['birthDate']);
+            } else {
+                /* Si mon POST birthDate ne match pas, j'affiche un message d'erreur */
+                $formError['birthDate'] = 'Votre date de naissance est invalide';
+            }
         } else {
-            $formError['birthDate'] = 'Votre date de naissance est invalide';
+            /* Si mon POST birthDate est vide, j'affiche un message d'erreur */
+            $formError['birthDate'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['birthDate'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['phoneNumber'])) {
-        if (preg_match($regexPhoneNumber, $_POST['phoneNumber'])) {
-            $users->phoneNumber = htmlspecialchars($_POST['phoneNumber']);
+        /* Si mon POST phoneNumber n'est pas vide */
+        if (!empty($_POST['phoneNumber'])) {
+            /* Si mon POST phoneNumber match avec la RegEx */
+            if (preg_match($regexPhoneNumber, $_POST['phoneNumber'])) {
+                /* Si c'est le cas, je remplis l'objet $users->phoneNumber en prenant soin de retirer tous les caractères html du champ */
+                $users->phoneNumber = htmlspecialchars($_POST['phoneNumber']);
+            } else {
+                /* Si mon POST phoneNumber ne match pas, j'affiche un message d'erreur */
+                $formError['phoneNumber'] = 'Le numéro saisi est invalide';
+            }
         } else {
-            $formError['phoneNumber'] = 'Le numéro saisi est invalide';
+            /* Si mon POST phoneNumber est vide, j'affiche un message d'erreur */
+            $formError['phoneNumber'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['phoneNumber'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['streetNumber'])) {
-        $users->streetNumber = htmlspecialchars($_POST['streetNumber']);
-    } else {
-        $formError['streetNumber'] = 'Champ obligatoire';
-    }
-
-    if (!empty($_POST['streetName'])) {
-        $users->streetName = htmlspecialchars($_POST['streetName']);
-    } else {
-        $formError['streetName'] = 'Champ obligatoire';
-    }
-
-    if (!empty($_POST['zipCode'])) {
-        $users->zipCode = htmlspecialchars($_POST['zipCode']);
-    } else {
-        $formError['zipCode'] = 'Champ obligatoire';
-    }
-
-    if (!empty($_POST['city'])) {
-        if (preg_match($regexName, $_POST['city'])) {
-            $users->city = htmlspecialchars($_POST['city']);
+        /* Si mon POST streetNumber vide, j'affiche un message d'erreur */
+        if (!empty($_POST['streetNumber'])) {
+            /*  S'il est bien rempli, je remplis l'objet $users->streetNumber en prenant soin de supprimer les caractères html du champ */
+            $users->streetNumber = htmlspecialchars($_POST['streetNumber']);
         } else {
-            $formError['city'] = 'Votre nom de ville est invalide';
+            /* Sinon, j'affiche un message d'erreur */
+            $formError['streetNumber'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['city'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['email'])) {
-        if (preg_match($regexEmail, $_POST['email'])) {
-            $users->mailAddress = htmlspecialchars($_POST['email']);
+        /* Si mon POST streetName n'est pas vide, j'affiche un message d'erreur */
+        if (!empty($_POST['streetName'])) {
+            /* S'il est bien rempli, je remplis l'objet $users->streetName en prenant soin de supprimer les caractères html du champ */
+            $users->streetName = htmlspecialchars($_POST['streetName']);
         } else {
-            $formError['email'] = 'L\'Adresse saisie est invalide';
+            /* Sinon j'affiche un message d'erreur */
+            $formError['streetName'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['email'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['password'])) {
-        if (preg_match($regexPassword, $_POST['password']) && $_POST['password'] == $_POST['passwordCheck']) {
-            $users->password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        /* Si mon POST zipCode n'est pas vide, j'affiche un message d'erreur */
+        if (!empty($_POST['zipCode'])) {
+            /* S'il est bien rempli, je remplis l'objet $users->zipCode en prenant soin de supprimer les caractères html du champ */
+            $users->zipCode = htmlspecialchars($_POST['zipCode']);
         } else {
-            $formError['password'] = 'Le mot de passe saisi doit comporter au moins 8 caractères, dont au moins une majuscule, une minuscule et un caractère spécial';
-            $formError['passwordCheck'] = 'Les mots de passe ne sont pas identiques';
+            /* Sinon j'affiche un message d'erreur */
+            $formError['zipCode'] = 'Champ obligatoire';
         }
-    } else {
-        $formError['password'] = 'Champ obligatoire';
-    }
 
-    if (!empty($_POST['licenseScanPath'])) {
-        $users->licenseScanPath = $_POST['licenseScanPath'];
-    } else {
-        $formError['licenseScanPath'] = 'Champ obligatoire';
-    }
-
-    if (!empty($_POST['licenseNumber'])) {
-        $users->licenseNumber = $_POST['licenseNumber'];
-    } else {
-        $formError['licenseNumber'] = 'Champ obligatoire';
-    }
-
-    if (!empty($_POST['isValid']) && $_POST['isValid'] == 'on') {
-        $users->isValid = 1;
-    } else {
-        $users->isValid = 0;
-    }
-
-//on vérifie que nous avons crée une entrée submit dans l'array $_POST, si présent on éxécute la méthide addPatient()
-    if (count($formError) == 0) {
-        if (!$users->addUser()) {
-            $formError['add'] = 'l\'envoi  du formulaire à échoué';
+        /* Si mon POST city est rempli */
+        if (!empty($_POST['city'])) {
+            /* Si mon POST city match avec la RegEx */
+            if (preg_match($regexName, $_POST['city'])) {
+                /* Je remplis mon objet $users->city en prenant soin de supprimer les caractères html */
+                $users->city = htmlspecialchars($_POST['city']);
+            } else {
+                /* Si mon POST city ne match pas, j'affiche un message d'erreur */
+                $formError['city'] = 'Votre nom de ville est invalide';
+            }
         } else {
-            $addSuccess = true;
+            /* Si mon POST city est vide, j'affiche un message d'erreur */
+            $formError['city'] = 'Champ obligatoire';
+        }
+
+        /* Si mon POST email est rempli */
+        if (!empty($_POST['email'])) {
+            /* Si mon POST email match avec la RegEx */
+            if (preg_match($regexEmail, $_POST['email'])) {
+                /* Je remplis l'objet $users->mailAddress en prenant soin de supprimer les caractères html */
+                $users->mailAddress = htmlspecialchars($_POST['email']);
+            } else {
+                /* Si mon POST email ne match pas, j'affiche un message d'erreur */
+                $formError['email'] = 'L\'Adresse saisie est invalide';
+            }
+        } else {
+            /* Si mon POST email est vide, j'affiche un message d'erreur */
+            $formError['email'] = 'Champ obligatoire';
+        }
+
+        /* Si mon POST licenseScanPath est rempli */
+        if (!empty($_POST['licenseScanPath'])) {
+            /* Je remplis l'objet $users->licenseScanPath */
+            $users->licenseScanPath = $_POST['licenseScanPath'];
+        } else {
+            /* Sinon, j'affiche un message d'erreur */
+            $formError['licenseScanPath'] = 'Champ obligatoire';
+        }
+
+        /* Si mon POST licenseNumber est rempli */
+        if (!empty($_POST['licenseNumber'])) {
+            /* Je remplis l'objet $users->licenseNumber*/
+            $users->licenseNumber = $_POST['licenseNumber'];
+        } else {
+            /* Sinon, j'affiche un message d'erreur */
+            $formError['licenseNumber'] = 'Champ obligatoire';
+        }
+
+        /* Si mon POST isValid est rempli et que sa valeur est on */
+        if (!empty($_POST['isValid']) && $_POST['isValid'] == 'on') {
+            /* Je stocke dans l'objet $users->isValid la valeur 1 */
+            $users->isValid = 1;
+        } else {
+            /* Sinon, je stocke la valeur 0 */
+            $users->isValid = 0;
+        }
+        /*Si mon tableau formError ne contient aucune ligne */
+        if (count($formError) == 0) {
+            /* Si ma méthode updateUser ne s'éxécuté pas */
+            if (!$users->updateUser()) {
+                /* J'affiche un message d'erreur */
+                $formError['update'] = 'l\'envoi  du formulaire à échoué';
+            } else {
+                /* Si tout va bien, ma méthode s'éxécute et je passe updateSuccess à true */
+                $updateSuccess = true;
+            }
         }
     }
-}
-?>
+    /* Puis, j'affiche le profil après mise à jour */
+    $detailedUserProfile = $users->getUserbyId();
+}   
