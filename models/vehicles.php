@@ -81,6 +81,12 @@ class vehicles extends database {
         $queryResult = $getVehicleInfo->fetch(PDO::FETCH_OBJ);
         return $queryResult;
     }
+    
+    public function deleteVehicleOnly() {
+        $deleteVehicleQuery = 'DELETE FROM `g2c6d_vehicles` WHERE `g2c6d_vehicles`.`id` = :vehicleId';
+        $deleteVehicle = $this->database->prepare($deleteVehicleQuery);
+        $deleteVehicle->bindValue(':userId', $this->id, PDO::PARAM_INT);
+    }
 
     public function __destruct() {
         parent::__destruct();

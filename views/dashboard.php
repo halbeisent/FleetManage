@@ -3,20 +3,15 @@ include '../navbar.php';
 include '../models/database.php';
 include '../models/users.php';
 include '../models/vehicles.php';
+include '../models/checks.php';
 $pageTitle = 'Dashboard utilisateur - CarPark Manager';
-$pageBackground = '';
+$pageBackground = 'userDashboardBody';
 include '../header.php';
 include '../controllers/dashboardController.php';
 ?>
 <div class="jumbo"></div>
 <div class="container icons">
     <div class="big-icon"></div>
-    <div class="rate">
-        <a  href="userDetails.php?userId=<?= $users->id ?>" class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="material-icons">edit</i></a>
-    </div>
-    <div class="add">
-        <a class="add-btn btn-floating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></a>
-    </div>
 </div>
 <div class="details">
     <h3><?= $_SESSION['firstName'] . ' ' . $_SESSION['lastName'] ?></h3>
@@ -62,24 +57,50 @@ include '../controllers/dashboardController.php';
             <?php } ?>
         </div>
     </div>
-    <div class="divider"></div>
-    <div class="card-panel">
-        <table>
-            <thead>
-            <th>Date du RDV</th>
-            <th>Véhicule concerné</th>
-            <th>Type de RDV</th>
-            </thead>
-            <?php foreach ($vehicleCard as $vehicle) { ?>
-                <tbody>
+    <div class="section">
+        <h5>Entretien du véhicule</h5>
+        <div class="card-panel">
+            <table>
+                <thead>
                     <tr>
-                        <td>05/02/2019</td>
-                        <td><?= $vehicle->manufacturerName . ' ' . $vehicle->modelName ?></td>
-                        <td>Entretien</td>
+                        <th>Dernière visite d'entretien</th>
+                        <th>Prochaine visite d'entretien</th>
                     </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($maintenanceChecks as $maintenanceCheck) { ?>
+                        <tr>
+                            <td><?= $maintenanceCheck->maintenanceCheckDate ?></td>
+                            <td><?= $maintenanceCheck->maintenanceNextCheckDate ?></td>
+                            <td><a href="maintenanceCheck.php?mcid=<?= $maintenanceCheck->id ?>"><i class="material-icons">description</i></a></td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
-            <?php } ?>
-        </table>
+            </table>
+        </div>
+    </div>
+    <div class="section">
+        <h5>Contrôle technique</h5>
+        <div class="card-panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dernier contrôle technique</th>
+                        <th>Prochain contrôle technique</th>
+                        <th>Détails</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($roadSafetyChecks as $roadSafetyCheck) { ?>
+                        <tr>
+                            <td><?= $roadSafetyCheck->date ?></td>
+                            <td><?= $roadSafetyCheck->nextDate ?></td>
+                            <td><a href="roadSafetyCheck.php?rcid=<?= $roadSafetyCheck->id ?>"><i class="material-icons">description</i></a></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <?php

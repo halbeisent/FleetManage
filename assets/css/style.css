@@ -10,7 +10,9 @@ h1 {
     border: 1px solid #EEE;
 }
 
-
+.brand-logo {
+    margin-left: 1%;
+}
 
 /* Fond de la liste des utilisateurs */
 #listBG {
@@ -27,9 +29,13 @@ h1 {
     background-image: url('../img/bg/enrollBG.jpg');
 }
 
-/* Fond du formulaire d'ajout de véhicules */
-#newCarBG {
-    background: url(../img/bg/newcarBG.jpg);
+/* Fond du dashboard véhicule */
+#vehicleDashboardBody {
+    background-color: #FDECEF;
+}
+
+#userDashboardBody {
+    background-color: #FDECEF;
 }
 
 .formContainer {
@@ -57,9 +63,9 @@ h1 {
 }
 .icons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
-.icons .big-icon {
+.big-icon {
   width: 180px;
   height: 180px;
   background: url(../img/placeholders/avatar.png) center top;

@@ -5,6 +5,8 @@ $users = new users();
 
 $vehicles = new vehicles();
 
+$checks = new checks();
+
 $userRole = '';
 
 if (isset($_SESSION['userId'])) {
@@ -12,6 +14,9 @@ if (isset($_SESSION['userId'])) {
     $detailedUserProfile = $users->getUserbyId();
     $vehicles->userId = $_SESSION['userId'];
     $vehicleCard = $vehicles->getVehicleByUser();
+    $checks->id = $_SESSION['userId'];
+    $maintenanceChecks = $checks->getMaintenanceAppointmentsByUserId();
+    $roadSafetyChecks = $checks->getRoadSafetyAppointmentsByUserId();
 }
 
 
