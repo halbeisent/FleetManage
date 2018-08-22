@@ -24,6 +24,11 @@ h1 {
     background-image: url('../img/bg/loginbg.jpg');
 }
 
+/* Fond de la page d'erreur */
+#errorPageBody {
+    background-image: url('../img/bg/errorPageBG.jpg')
+}
+
 /* Fond du formulaire d'inscription */
 #enrollBody {
     background-image: url('../img/bg/enrollBG.jpg');

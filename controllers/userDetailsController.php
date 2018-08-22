@@ -1,10 +1,14 @@
 <?php
 
+session_start();
+
 /* J'instancie un nouvel objet users avec ma méthode users() */
 $users = new users();
 
 /* J'initialise mon tableau contenant mes futures erreurs de formulaire à vide */
 $formError = array();
+
+$userGroupsList = $users->getUserGroups();
 
 /* Si je passe un id en paramètre d'URL */
 if (isset($_GET['id'])) {
@@ -155,7 +159,7 @@ if (isset($_GET['id'])) {
 
         /* Si mon POST licenseNumber est rempli */
         if (!empty($_POST['licenseNumber'])) {
-            /* Je remplis l'objet $users->licenseNumber*/
+            /* Je remplis l'objet $users->licenseNumber */
             $users->licenseNumber = $_POST['licenseNumber'];
         } else {
             /* Sinon, j'affiche un message d'erreur */
@@ -170,7 +174,7 @@ if (isset($_GET['id'])) {
             /* Sinon, je stocke la valeur 0 */
             $users->isValid = 0;
         }
-        /*Si mon tableau formError ne contient aucune ligne */
+        /* Si mon tableau formError ne contient aucune ligne */
         if (count($formError) == 0) {
             /* Si ma méthode updateUser ne s'éxécuté pas */
             if (!$users->updateUser()) {
@@ -184,4 +188,14 @@ if (isset($_GET['id'])) {
     }
     /* Puis, j'affiche le profil après mise à jour */
     $detailedUserProfile = $users->getUserbyId();
-}   
+}
+
+if ($_SESSION['roleId'] == 3) {
+    $navbar = '../navbarUser.php';
+} else if ($_SESSION['roleId'] == 2) {
+    $navbar = '../navbarParkManager.php';
+} else if ($_SESSION['roleId'] == 1) {
+    $navbar = '../navbarAdmin.php'; 
+}
+
+session_write_close();

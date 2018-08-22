@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 // On instancie un nouvel $patients objet comme classe patients
 $users = new users();
 
@@ -16,6 +18,9 @@ $addSuccess = false;
 
 $hasLicense = false;
 
+if (empty($_SESSION)) {
+    $navbar = '../defaultNavbar.php';
+}
 
 if (isset($_POST['submit'])) {
 
@@ -52,16 +57,6 @@ if (isset($_POST['submit'])) {
         $formError['birthDate'] = 'Champ obligatoire';
     }
 
-    if (!empty($_POST['phoneNumber'])) {
-        if (preg_match($regexPhoneNumber, $_POST['phoneNumber'])) {
-            $users->phoneNumber = htmlspecialchars($_POST['phoneNumber']);
-        } else {
-            $formError['phoneNumber'] = 'Le numéro saisi est invalide';
-        }
-    } else {
-        $formError['phoneNumber'] = 'Champ obligatoire';
-    }
-
     if (!empty($_POST['streetNumber'])) {
         $users->streetNumber = htmlspecialchars($_POST['streetNumber']);
     } else {
@@ -94,7 +89,15 @@ if (isset($_POST['submit'])) {
         if (preg_match($regexEmail, $_POST['email'])) {
             $users->mailAddress = htmlspecialchars($_POST['email']);
         } else {
+        var_dump($users->mailAddress);
             $formError['email'] = 'L\'Adresse saisie est invalide';
+        }
+        $users->mailAddress = htmlspecialchars($_POST['email']);
+        $emailMatch = $users->getMailCheck();
+        if (!is_object($emailMatch)) {
+            $formError['email'] = 'Un problème est survenu';
+        } else if ($emailMatch->usedMailAddress) {
+            $formError['email'] = 'email déjà utilisé';
         }
     } else {
         $formError['email'] = 'Champ obligatoire';
@@ -138,4 +141,6 @@ if (isset($_POST['submit'])) {
         }
     }
 }
+
+session_write_close();
 ?>

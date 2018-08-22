@@ -7,6 +7,7 @@ class users extends database {
 
     public $id = '';
     public $mailAddress = '';
+    public $userGroups = '';
     public $password = '';
     public $lastName = '';
     public $firstName = '';
@@ -19,7 +20,8 @@ class users extends database {
         parent::__construct();
     }
 
-    /* Je créée la fonction addUser*/
+    /* Je créée la fonction addUser */
+
     public function addUser() {
         /* Préparation de la requête */
         $addQuery = 'INSERT INTO `g2c6d_users` (`mailAddress`, `password`, `lastName`, `firstName`, `birthDate`, `licenseScanPath`, `licenseNumber`, `isValid`, `streetNumber`, `streetName`, `zipCode`, `city`, `userGroups`) VALUES (:mailAddress, :password, :lastName, :firstName, STR_TO_DATE(:birthDate, \'%d/%m/%Y\'), :licenseScanPath, :licenseNumber, :isValid, :streetNumber, :streetName, :zipCode, :city, 3)';
@@ -41,8 +43,18 @@ class users extends database {
         /* J'éxécute ma requête une fois prête */
         return $addUser->execute();
     }
+    
+    public function getMailCheck() {
+        $emailQuery = 'SELECT COUNT(*) AS `usedMailAddress` FROM `g2c6d_users` WHERE `mailAddress` = :mailAddress';
+        $emailCheck = $this->database->prepare($emailQuery);
+        $emailCheck->bindValue(':mailAddress', $this->mailAddress, PDO::PARAM_STR);
+        $emailCheck->execute();
+        $queryResult = $emailCheck->fetch(PDO::FETCH_OBJ);
+        return $queryResult;
+    }
 
     /* Je créée la fonction updateUser */
+
     public function updateUser() {
         /* Je définis ma requête et je la stocke dans une variable pour plus tard */
         $updateQuery = 'UPDATE `g2c6d_users` '
@@ -68,6 +80,7 @@ class users extends database {
     }
 
     /* Je créée la fonction getHashByMail */
+
     public function getHashByMail() {
         /* Je stocke ma requête dans une variable pour une utilisation ultérieure */
         $checkQuery = 'SELECT `password` FROM `g2c6d_users` WHERE `mailAddress` = :mailAddress';
@@ -88,6 +101,7 @@ class users extends database {
     }
 
     /* Je créée la fonction getUserByMail */
+
     public function getUserByMail() {
         /* Je stocke ma requête pour l'utiliser plus tard */
         $userQuery = 'SELECT `lastName`, `firstName`, `id`, `userGroups` FROM `g2c6d_users` WHERE `mailAddress` = :mailAddress';
@@ -124,11 +138,12 @@ class users extends database {
     }
 
     /* Je créée ma requête getUserById */
+
     public function getUserbyId() {
         /* Je créée une variable qui va me stocker un booléen en fonction du résultat de la requête */
         $getSuccess = false;
         /* Je stocke ma requête pour la réutiliser ultérieurement */
-        $query = 'SELECT `id`, `lastName`, `firstName`, DATE_FORMAT(`birthDate`, "%d/%m/%Y") AS `birthDate`, `streetNumber`, `streetName`, `zipCode`, `city`, `mailAddress`, `licenseScanPath`, `licenseNumber`, `isValid` FROM `g2c6d_users` WHERE `id` = :id';
+        $query = 'SELECT `id`, `lastName`, `firstName`, DATE_FORMAT(`birthDate`, "%d/%m/%Y") AS `birthDate`, `streetNumber`, `streetName`, `zipCode`, `city`, `mailAddress`, `userGroups`, `licenseScanPath`, `licenseNumber`, `isValid` FROM `g2c6d_users` WHERE `id` = :id';
         /* Je prépare ma requête en raison de la présence de marqueurs nominatifs */
         $getUser = $this->database->prepare($query);
         /* Je bind ma value pour raisons de sécurité */
@@ -148,6 +163,7 @@ class users extends database {
                 $this->zipCode = $user->zipCode;
                 $this->city = $user->city;
                 $this->mailAddress = $user->mailAddress;
+                $this->userGroups = $user->userGroups;
                 $this->licenseScanPath = $user->licenseScanPath;
                 $this->licenseNumber = $user->licenseNumber;
                 $this->isValid = $user->isValid;
@@ -159,7 +175,16 @@ class users extends database {
         return $getSuccess;
     }
 
+    public function getUserGroups() {
+        $userGroupsQuery = 'SELECT `g2c6d_userGroups`.`id`, `g2c6d_userGroups`.`role` FROM `g2c6d_userGroups`';
+        $userGroupsResult = $this->database->query($userGroupsQuery);
+        $userGroupsResult->execute();
+        $userGroupsList = $userGroupsResult->fetchAll(PDO::FETCH_OBJ);
+        return $userGroupsList;
+    }
+
     /* Je crée ma méthode deleteUserById */
+
     public function deleteUserById() {
         /* Je stocke ma requête dans une variable pour la réutiliser ultérieurement */
         $userQuery = 'DELETE FROM `g2c6d_users` WHERE `id` = :id';

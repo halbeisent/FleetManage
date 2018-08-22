@@ -1,13 +1,13 @@
 <?php
-include '../navbar.php';
 include '../models/database.php';
 include '../models/users.php';
 include '../models/vehicles.php';
 include '../models/checks.php';
-$pageTitle = 'Dashboard utilisateur - CarPark Manager';
+$pageTitle = 'Dashboard utilisateur';
 $pageBackground = 'userDashboardBody';
 include '../header.php';
 include '../controllers/dashboardController.php';
+include $navbar;
 ?>
 <div class="jumbo"></div>
 <div class="container icons">

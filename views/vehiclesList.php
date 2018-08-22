@@ -1,5 +1,5 @@
 <?php
-include '../navbar.php';
+include $navbar;
 include '../models/database.php';
 include '../models/vehicles.php';
 include '../controllers/vehiclesListController.php';

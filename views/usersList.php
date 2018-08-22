@@ -1,8 +1,8 @@
 <?php
-include '../navbar.php';
 include '../models/database.php';
 include '../models/users.php';
 include '../controllers/usersListController.php';
+include $navbar;
 $pageBackground = 'listBG';
 $pageTitle = 'Utilisateurs';
 include '../header.php';

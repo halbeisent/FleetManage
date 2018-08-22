@@ -1,5 +1,10 @@
 <?php
+
 session_start();
+
+if (empty($_SESSION)) {
+    header('Location: ../views/errorPage.php');
+}
 
 $users = new users();
 
@@ -8,6 +13,8 @@ $vehicles = new vehicles();
 $checks = new checks();
 
 $userRole = '';
+
+$navbar = '';
 
 if (isset($_SESSION['userId'])) {
     $users->id = $_SESSION['userId'];
@@ -23,10 +30,13 @@ if (isset($_SESSION['userId'])) {
 
 if ($_SESSION['roleId'] == 3) {
     $userRole = 'Utilisateur';
-} else if($_SESSION['roleId'] == 2) {
+    $navbar = '../navbarUser.php';
+} else if ($_SESSION['roleId'] == 2) {
     $userRole = 'Gestionnaire de parc';
-} else if($_SESSION['roleId'] == 1) {
+    $navbar = '../navbarParkManager.php';
+} else if ($_SESSION['roleId'] == 1) {
     $userRole = 'Administrateur';
+    $navbar = '../navbarAdmin.php'; 
 }
 
 session_write_close();
