@@ -58,13 +58,14 @@ class users extends database {
     public function updateUser() {
         /* Je définis ma requête et je la stocke dans une variable pour plus tard */
         $updateQuery = 'UPDATE `g2c6d_users` '
-                . 'SET `mailAddress` = :mailAddress, `lastName` = :lastName, `firstName` = :firstName, `birthDate` = STR_TO_DATE(:birthDate, \'%d/%m/%Y\'), `licenseScanPath` = :licenseScanPath, `licenseNumber` = :licenseNumber, '
+                . 'SET `mailAddress` = :mailAddress, `userGroups` = :userGroups, `lastName` = :lastName, `firstName` = :firstName, `birthDate` = STR_TO_DATE(:birthDate, \'%d/%m/%Y\'), `licenseScanPath` = :licenseScanPath, `licenseNumber` = :licenseNumber, '
                 . '`isValid` = :isValid, `streetNumber` = :streetNumber, `streetName` = :streetName, `zipCode` = :zipCode, `city` = :city WHERE `id` = :id';
         /* Je prépare ma requête en raison des marqueurs nominatifs */
         $userUpdate = $this->database->prepare($updateQuery);
         /* Je bind mes values par sécurité */
         $userUpdate->bindValue(':id', $this->id, PDO::PARAM_INT);
         $userUpdate->bindValue(':mailAddress', $this->mailAddress, PDO::PARAM_STR);
+        $userUpdate->bindValue(':userGroups', $this->userGroups, PDO::PARAM_INT);
         $userUpdate->bindValue(':lastName', $this->lastName, PDO::PARAM_STR);
         $userUpdate->bindValue(':firstName', $this->firstName, PDO::PARAM_STR);
         $userUpdate->bindValue(':birthDate', $this->birthDate, PDO::PARAM_STR);

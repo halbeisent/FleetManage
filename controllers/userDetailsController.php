@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
     $updateSuccess = false;
 
     /* Si je passe un updateBtn en POST */
-    if (isset($_POST['updateBtn'])) {
+    if (isset($_POST['submit'])) {
         //Création des regex pour controler les données du formulaire
         $regexName = '/^[a-zA-Zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ-]+$/';
         $regexBirthdate = '/^(0[1-9]|([1-2][0-9])|3[01])\/(0[1-9]|1[012])\/((19|20)[0-9]{2})$/';
@@ -76,20 +76,6 @@ if (isset($_GET['id'])) {
             $formError['birthDate'] = 'Champ obligatoire';
         }
 
-        /* Si mon POST phoneNumber n'est pas vide */
-        if (!empty($_POST['phoneNumber'])) {
-            /* Si mon POST phoneNumber match avec la RegEx */
-            if (preg_match($regexPhoneNumber, $_POST['phoneNumber'])) {
-                /* Si c'est le cas, je remplis l'objet $users->phoneNumber en prenant soin de retirer tous les caractères html du champ */
-                $users->phoneNumber = htmlspecialchars($_POST['phoneNumber']);
-            } else {
-                /* Si mon POST phoneNumber ne match pas, j'affiche un message d'erreur */
-                $formError['phoneNumber'] = 'Le numéro saisi est invalide';
-            }
-        } else {
-            /* Si mon POST phoneNumber est vide, j'affiche un message d'erreur */
-            $formError['phoneNumber'] = 'Champ obligatoire';
-        }
 
         /* Si mon POST streetNumber vide, j'affiche un message d'erreur */
         if (!empty($_POST['streetNumber'])) {
@@ -131,6 +117,10 @@ if (isset($_GET['id'])) {
         } else {
             /* Si mon POST city est vide, j'affiche un message d'erreur */
             $formError['city'] = 'Champ obligatoire';
+        }
+        
+        if (!empty($_POST['userGroupSelector'])) {
+            $users->userGroups = htmlspecialchars($_POST['userGroupSelector']);
         }
 
         /* Si mon POST email est rempli */
