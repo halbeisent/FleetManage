@@ -1,5 +1,4 @@
 <?php
-include '../navbar.php';
 include '../models/database.php';
 include '../models/vehicles.php';
 include '../models/checks.php';
@@ -7,6 +6,7 @@ $pageBackground = 'vehicleDashboardBody';
 $pageTitle = 'Dashboard Véhicule';
 include '../header.php';
 include '../controllers/vehicleDashboardController.php';
+include $navbar;
 ?>
 <div class="jumbo"></div>
 <div class="container icons">
@@ -22,7 +22,7 @@ include '../controllers/vehicleDashboardController.php';
         <div class="card-panel">
             <p class="center-align">Numéro de série (VIN): <?= $vehicleDetails->serialNumber ?></p>
             <p class="center-align">Catégorie de véhicule: <?= $vehicleDetails->vehiclesTypes ?></p>
-            <p class="center-align">Carburant du véhicule: <?= $vehicleDetails->energies ?></p>
+            <p class="center-align">Carburant du véhicule: <?= $vehicleDetails->energyType ?></p>
         </div>
     </div>
     <div class="section">

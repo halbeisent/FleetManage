@@ -10,13 +10,32 @@ h1 {
     border: 1px solid #EEE;
 }
 
+/* Décalage du titre de la navbar */
 .brand-logo {
     margin-left: 1%;
+}
+
+.delClass {
+    color: #F44336;
+}
+
+.normalIcons {
+    color: #37474F;
 }
 
 /* Fond de la liste des utilisateurs */
 #listBG {
     background: url(../img/bg/usersListBG.jpg);
+}
+
+/* Fond du formulaire d'ajout de véhicule */
+#newVehicleBG {
+    background: url(../img/bg/newCarBG.jpg);
+}
+
+/* Fond de la liste des véhicules */
+#vehiclesListBG {
+    background: url(../img/bg/vehiclesListBG.jpg);
 }
 
 /* Fond de la page de login */
@@ -39,6 +58,7 @@ h1 {
     background-color: #FDECEF;
 }
 
+/* Fond du dashboard utilisateur */
 #userDashboardBody {
     background-color: #FDECEF;
 }
@@ -55,7 +75,7 @@ h1 {
 }
 
 /* Liste des utilisateurs */
-.table-users{
+.table-users, .table-vehicles{
     font-size: 0.8rem;
 }
 

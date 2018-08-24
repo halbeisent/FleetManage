@@ -12,9 +12,7 @@ $vehicles = new vehicles();
 
 $checks = new checks();
 
-$userRole = '';
-
-$navbar = '';
+$userRole = '';;
 
 if (isset($_SESSION['userId'])) {
     $users->id = $_SESSION['userId'];
