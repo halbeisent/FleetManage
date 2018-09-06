@@ -118,7 +118,7 @@ if (isset($_GET['id'])) {
             /* Si mon POST city est vide, j'affiche un message d'erreur */
             $formError['city'] = 'Champ obligatoire';
         }
-        
+
         if (!empty($_POST['userGroupSelector'])) {
             $users->userGroups = htmlspecialchars($_POST['userGroupSelector']);
         }
@@ -139,12 +139,17 @@ if (isset($_GET['id'])) {
         }
 
         /* Si mon POST licenseScanPath est rempli */
-        if (!empty($_POST['licenseScanPath'])) {
-            /* Je remplis l'objet $users->licenseScanPath */
-            $users->licenseScanPath = $_POST['licenseScanPath'];
-        } else {
-            /* Sinon, j'affiche un message d'erreur */
-            $formError['licenseScanPath'] = 'Champ obligatoire';
+        if (!empty($_FILES['licenseScan'])) {
+            $licenseScanName = $_POST['lastName'] . '_' . $_POST['firstName'];
+            $licenseExtension = pathinfo($_FILES['licenseScan']['name']);
+            $allowedExtensions = array('jpg', 'jpeg', 'png', 'pdf');
+            if (in_array($licenseExtension['extension'], $allowedExtensions)) {
+                $licenseScanFile = $fileUpload . $licenseScanName . '.' . $licenseExtension['extension'];
+                move_uploaded_file($_FILES['licenseScan']['tmp_name'], $licenseScanFile);
+                chmod($licenseScanFile, 0777);
+            } else {
+                $formError['fileExtension'] = 'Extension non autorisée!';
+            }
         }
 
         /* Si mon POST licenseNumber est rempli */
@@ -185,7 +190,7 @@ if ($_SESSION['roleId'] == 3) {
 } else if ($_SESSION['roleId'] == 2) {
     $navbar = '../navbarParkManager.php';
 } else if ($_SESSION['roleId'] == 1) {
-    $navbar = '../navbarAdmin.php'; 
+    $navbar = '../navbarAdmin.php';
 }
 
 session_write_close();

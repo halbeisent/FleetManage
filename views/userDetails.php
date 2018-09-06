@@ -24,7 +24,6 @@ include $navbar;
                     <div class="section">
                         <h5>Votre identité</h5>
                         <div class="row">
-                            <?php var_dump($detailedUserProfile) ?>
                             <div class="input-field col s12 m6 l6">
                                 <input id="firstName" name="firstName" type="text" class="validate" value="<?= $users->firstName ?>" />
                                 <label for="firstName">Prénom</label>
@@ -92,7 +91,7 @@ include $navbar;
                         <h5>Vos informations de conducteur</h5>
                         <div class="row">
                             <div class="file-field input-field col s12 m6 l12">
-                                <div class="btn">
+                                <div class="btn blue-grey darken-4">
                                     <span>Scan du permis</span>
                                     <input type="file">
                                 </div>

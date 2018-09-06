@@ -67,6 +67,19 @@ if ($_SESSION['roleId'] == 2) {
         } else {
             $formError['interiorPic'] = 'Saisie obligatoire';
         }
+        
+        if (!empty($_FILES['interiorPic'])) {
+        $interiorPicFileName = $_POST['lastName'] . '_' . $_POST['firstName'];
+        $licenseExtension = pathinfo($_FILES['interiorPic']['name']);
+        $allowedExtensions = array('jpg', 'jpeg', 'png', 'pdf');
+        if (in_array($licenseExtension['extension'], $allowedExtensions)) {
+            $interiorPicFile = $fileUpload . $interiorPicFileName . '.' . $licenseExtension['extension'];
+            move_uploaded_file($_FILES['interiorPic']['tmp_name'], $interiorPicFile);
+            chmod($interiorPicFile, 0777);
+        } else {
+            $formError['fileExtension'] = 'Extension non autorisée!';
+        }
+    }
 
         if (!empty($_POST['exteriorPic'])) {
             $vehicles->exteriorPic = htmlspecialchars($_POST['exteriorPic']);

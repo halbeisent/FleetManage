@@ -11,7 +11,7 @@ $regexBirthdate = '/^(0[1-9]|([1-2][0-9])|3[01])\/(0[1-9]|1[012])\/((19|20)[0-9]
 $regexEmail = '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'; // regex date au format yyyy-mm-dd
 $regexPhoneNumber = '/^[0-9]{10,10}$/';
 $regexPassword = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
-$fileUpload = '/tmp/fileUploads/';
+$fileUpload = '../uploads/licenseScans/';
 
 //Initialise $addSuccess en False pour afficher message
 $addSuccess = false;
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
         if (preg_match($regexEmail, $_POST['email'])) {
             $users->mailAddress = htmlspecialchars($_POST['email']);
         } else {
-        var_dump($users->mailAddress);
+            var_dump($users->mailAddress);
             $formError['email'] = 'L\'Adresse saisie est invalide';
         }
         $users->mailAddress = htmlspecialchars($_POST['email']);
@@ -114,10 +114,17 @@ if (isset($_POST['submit'])) {
         $formError['password'] = 'Champ obligatoire';
     }
 
-    if (!empty($_POST['licenseScanPath'])) {
-        $users->licenseScanPath = $_POST['licenseScanPath'];
-    } else {
-        $formError['licenseScanPath'] = 'Champ obligatoire';
+    if (!empty($_FILES['licenseScan'])) {
+        $licenseScanName = $_POST['lastName'] . '_' . $_POST['firstName'];
+        $licenseExtension = pathinfo($_FILES['licenseScan']['name']);
+        $allowedExtensions = array('jpg', 'jpeg', 'png', 'pdf');
+        if (in_array($licenseExtension['extension'], $allowedExtensions)) {
+            $licenseScanFile = $fileUpload . $licenseScanName . '.' . $licenseExtension['extension'];
+            move_uploaded_file($_FILES['licenseScan']['tmp_name'], $licenseScanFile);
+            chmod($licenseScanFile, 0777);
+        } else {
+            $formError['fileExtension'] = 'Extension non autorisée!';
+        }
     }
 
     if (!empty($_POST['licenseNumber'])) {

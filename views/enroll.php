@@ -102,12 +102,13 @@ if (!empty($_SESSION['userId'])) {
                         <h5>Vos informations de conducteur</h5>
                         <div class="row">
                             <div class="file-field input-field col s12 m6 l12">
-                                <div class="btn">
+                                <div class="btn blue-grey darken-4">
                                     <span>Scan du permis</span>
-                                    <input type="file">
+                                    <input type="file" name="licenseScan" id="licenseScan">
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input class="file-path validate" type="text" name="licenseScanPath" id="licenseScanPath" />
+                                    <p class="error"><?= isset($formError['fileExtension']) ? $formError['fileExtension'] : '' ?></p>
                                 </div>
                             </div>
                             <div class="input-field col s12 m6 l6">

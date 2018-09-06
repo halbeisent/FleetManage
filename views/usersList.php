@@ -16,7 +16,7 @@ include '../header.php';
 ?>
 <div class="container">
     <?php foreach ($usersList as $user) { ?>
-        <!-- Modal Structure -->
+        <!-- Structure de ma modale je remplis les différents liens nécéssitant un identifiant dynamiquement -->
         <div id="modal<?= $user->id ?>" class="modal">
             <div class="modal-content">
                 <h4>Suppression d'utilisateur</h4>
